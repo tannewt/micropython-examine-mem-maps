@@ -51,13 +51,13 @@ class Block(object):
     """ an address, duration, name, attributes """
     def __init__(self, addr, dur, name, attr):
         # all stored strings
-        self.addr = addr 
+        self.addr = addr
         self.dur = dur
         self.name = name
         self.attr = attr
     def __repr__(self):
         return "<Block %s %s(dur %s) %s>" % (self.addr, self.name, self.dur, self.attr)
-        
+
     def address(self):
         " return as num, byte_count"
         return (int(self.addr, 0), (len(self.addr)-2)//2)
@@ -125,7 +125,7 @@ class Region(object):
     def equivalent(self, test_region):
         " Test to see if same region. Sometimes region in twice but has zero size "
         pass
-        
+
 class Symbol(object):
     """ many symbols appear linked to the one location.
         store the locations and lists of symbols and attr
@@ -139,7 +139,7 @@ class Symbol(object):
         self.labels = [] # add new ones here (unique test as added ?)
         self.primary = primary # the LHS, also need to check in labels list for matches
         self.attributes = []
-        
+
         # each entry is:
         #  sym_domain.label, addr, size, file
         # fill at end not always incrementing but always within size
@@ -203,7 +203,7 @@ def region_summary(regions):
             if length:
                 returned_cats.append([name,length])
     return returned_cats
-        
+
 
 
 def process_attr(region, attr):
@@ -255,7 +255,7 @@ def process_symbol(region, body, idx, name):
                 else: # new symbol
                     print "newsym", line
         print symbol.describe()
-        
+
     #
     sys.exit()
     return symbols, idx
@@ -310,7 +310,7 @@ def process_region(body, verbose=DEBUG):
 ##                symbol,idx = process_symbol(region, body, idx, name)
 ##                region.symbols.append(symbol)
                 pass
-            # 
+            #
             idx += 1
     #
     if verbose:
@@ -319,8 +319,8 @@ def process_region(body, verbose=DEBUG):
     #
     #sys.exit()
     return region
-    
-    
+
+
 ### helper functions
 def parse_sym_name(line):
     """ extract domain and name from head of line
@@ -343,7 +343,7 @@ def parse_sym_name(line):
 
 ### Regions
 def parse_region(section, idx):
-    """ 
+    """
     """
     done = False
     line = section[idx]
@@ -428,8 +428,8 @@ def parse_linker_memmap(section, verbose=DEBUG):
                 assert int(line[0], 0)
                 mems.append(line)
         #
-        idx += 1 
-    # 
+        idx += 1
+    #
     if verbose:
         print "  Loads: %d found. E.g." % len(loads)
         for i in range(min(2, len(loads))): print "  ", loads[i]
@@ -505,7 +505,7 @@ def parse_cross_refs(section, verbose=DEBUG):
                 if symbol:
                     symbols.append(symbol)
                 symbol = line
-                
+
     # do last one
     symbols.append(symbol)
     #
@@ -516,9 +516,9 @@ def parse_cross_refs(section, verbose=DEBUG):
         for i in range(min(6, len(symbols)-1),0,-1):
             print "   ",symbols[-i]
     return symbols
-            
 
-            
+
+
 def parse_mem_config(section, verbose=DEBUG):
     """ Parse data in the "Memory Configuration" section
         Expecting a sequence of:
@@ -544,7 +544,7 @@ def parse_mem_config(section, verbose=DEBUG):
         for b in blocks: print " ",b
     return blocks
 
-        
+
 def parse_common_symbols(section, verbose=DEBUG):
     """ The 'Allocating Common Symbols' block contains list of
         label, size, file
@@ -652,7 +652,7 @@ def gather_memory_structure(mem_map):
     print
     # gather OUTPUT
     section_id = SECTIONS[5]
-    structure[section_id] = parse_Output(mem_map[section_id])  # list of 
+    structure[section_id] = parse_Output(mem_map[section_id])  # list of
     # gather Cross ref table
     section_id = SECTIONS[6]
     if mem_map.has_key(section_id):
@@ -703,10 +703,7 @@ def export_categories(filename, returned_cats, verbose=True):
 ###
 if __name__ == "__main__":
     returned_cats = [] # for exporting
-    maps = ["teensy_micropython_dh_01.map",
-            "unix_micropython_dh_01.map",
-            "stmhal_firmware_dh_01.map",
-            "microbit-micropython_01.map"]
+    maps = ["firmware.elf.map"]
     #maps = ["microbit-micropython_01.map"]
     for m in maps:
         mem_map = read_map_file("mapfiles/"+m)
@@ -718,4 +715,3 @@ if __name__ == "__main__":
         print
     #
     export_categories("mappings.csv",returned_cats)
-
